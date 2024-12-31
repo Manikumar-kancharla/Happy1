@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy New Year 2025</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+            background-color: black;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+        }
+
+        #message {
+            font-size: 4em;
+            font-weight: bold;
+            color: gold;
+            animation: pulse 2s infinite;
+        }
+
+        #mani {
+            margin-top: 20px;
+            font-size: 3em;
+            font-weight: bold;
+        }
+
+        #stop-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 10;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <button id="stop-button" class="btn btn-danger">Stop Music</button>
+    <canvas id="fireworks"></canvas>
+    <div id="message" class="animate__animated animate__fadeInDown">Wish You Happy New Year 2025</div>
+    <div id="mani"></div>
+    <audio id="song" src="happy.mp3" autoplay loop></audio>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Fireworks animation setup
+        const canvas = document.getElementById('fireworks');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const fireworks = [];
+
+        function Firework() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.radius = Math.random() * 5+2;
+            this.color = `hsl(${Math.random() * 360}, 100%, 50%)`;
+            this.vx = Math.random() * 4 - 2;
+            this.vy = Math.random() * 4 - 2;
+            this.life = 100;
+        }
+
+        Firework.prototype.update = function () {
+            this.x += this.vx;
+            this.y += this.vy;
+            this.life--;
+        };
+
+        Firework.prototype.draw = function () {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+            ctx.fillStyle = this.color;
+            ctx.fill();
+        };
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            if (Math.random() < 0.2) {
+                fireworks.push(new Firework());
+            }
+            fireworks.forEach((firework, index) => {
+                firework.update();
+                firework.draw();
+                if (firework.life <= 0) {
+                    fireworks.splice(index, 1);
+                }
+            });
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
+        // Name letter-by-letter animation with colors and Bootstrap effects
+        const nameElement = document.getElementById('mani');
+        const name = 'Pavani BaliReddy';
+        const colors = ['red', 'green', 'blue', 'yellow', 'orange', 'pink', 'purple'];
+        let currentIndex = 0;
+
+        function animateName() {
+            if (currentIndex < name.length) {
+                const letter = name[currentIndex];
+                const coloredLetter = `<span style="color: ${colors[currentIndex % colors.length]};" class="animate__animated animate__fadeInLeft">${letter}</span>`;
+                nameElement.innerHTML += coloredLetter;
+                currentIndex++;
+                setTimeout(animateName, 500);
+            }
+        }
+
+        animateName();
+
+        // Adjust canvas size on resize
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        // Stop button functionality
+        const stopButton = document.getElementById('stop-button');
+        const song = document.getElementById('song');
+
+        stopButton.addEventListener('click', () => {
+            song.pause();
+        });
+    </script>
+</body>
+</html>
